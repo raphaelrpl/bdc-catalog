@@ -42,11 +42,11 @@ setup_requires = [
 ]
 
 install_requires = [
-    'Flask-Migrate>=2.5.2',
+    'Flask-Alembic>=2.0,<3',
     'Flask-SQLAlchemy>=2.4.1',
-    'GeoAlchemy2>=0.6.2',
-    'SQLAlchemy[postgresql]>=1.3.10',
-    'SQLAlchemy-Utils>=0.34.2',
+    'GeoAlchemy2>=0.6,<1',
+    'SQLAlchemy[postgresql]>=1.3,<2',
+    'SQLAlchemy-Utils>=0.34,<1',
 ]
 
 packages = find_packages()
@@ -73,6 +73,12 @@ setup(
     entry_points={
         'console_scripts': [
             'bdc-db = bdc_db.cli:cli'
+        ],
+        'bdc_db.alembic': [
+            'bdc_db = bdc_db:alembic'
+        ],
+        'bdc_db.models': [
+            'bdc_db = bdc_db.models'
         ]
     },
     extras_require=extras_require,
