@@ -24,3 +24,5 @@ recursive-include doc *.rst
 recursive-include doc Makefile
 recursive-include examples *.py
 recursive-include tests *.py
+recursive-include bdc_db *.mako
+recursive-include bdc_db *.py
