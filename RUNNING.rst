@@ -41,7 +41,7 @@ Creating the Brazil Data Cube data model
         bdc-db db create-db
 
 
-**2.** After that, run Flask-Migrate command to prepare the Brazil Data Cube data model:
+**2.** After that, run Flask-Alembic command to prepare the Brazil Data Cube data model:
 
 .. code-block:: shell
 
@@ -84,7 +84,7 @@ Adding bdc-db as dependency to existing modules
 
 .. note::
 
-        The following steps assume that ``bdc_test`` is the name of the module for which you are adding alembic support.
+        The following steps assume that ``bdc-test`` is the name of the module for which you are adding alembic support.
 
 
 The module ``bdc-db`` uses dynamic model loading in order to track both ``bdc-db`` and others python modules. It was built on top of `Python Setup entry_points <https://setuptools.readthedocs.io/en/latest/setuptools.html>`_.
@@ -113,16 +113,15 @@ The ``setup.py`` should be like as follows:
           },
         )
 
+
 This will register the ``bdc_test/alembic`` directory in the alembic's version locations.
-It also will make the ``bdc_test/models`` be discoverable and loaded in memory to track revisions.
+It also will make the ``bdc_test/models`` be discoverable and loaded in memory to track alembic revisions.
 
 
 Creating a new revision
 -----------------------
 
 The ``bdc-db`` supports `Alembic Branches <https://alembic.sqlalchemy.org/en/latest/branches.html>`_, which enables to generate revisions on different modules.
-
-Each module should create a ``branch`` for its revisions.
 
 To create a new revision for module ``bdc_test``, you must create a ``branch`` and get latest revision id to make persistent migration.
 Use the following command to get latest revision id:
