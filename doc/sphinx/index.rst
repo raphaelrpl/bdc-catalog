@@ -17,6 +17,7 @@ Documentation
    :caption: Contents:
 
    installation
+   running
    api
    license
 

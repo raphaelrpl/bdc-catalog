@@ -133,10 +133,12 @@ In order to do generate migration for your module, use the following command:
             --branch your_module_name \
             --parent c7b452f40e8c
 
+.. note::
+
+        The ``--parent`` argument is required only in the first revision generation.
+        When a ``parent`` is not given for **other modules** the revision will be placed into default branch ``()`` and you may face issues
+        during ``bdc-db alembic upgrade``.
 
 .. note::
 
-        When a ``parent`` is not given for **other modules** the revision will be placed into default branch ``()`` and you may face issues
-        during ``bdc-db alembic upgrade``.
-        The ``--parent`` argument is required only in the first revision generation.
         If the path is not given the new revision will be placed in the ``bdc_db/alembic`` directory and should be moved.
