@@ -27,7 +27,6 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI',
                                                            'postgresql://postgres:password@localhost:5432/bdcdb')
 
-    print(app.config['SQLALCHEMY_DATABASE_URI'])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
     BDCDatabase(app)

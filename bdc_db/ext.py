@@ -51,6 +51,8 @@ class BDCDatabase:
             )
         ]
 
+        # Remove duplicated bdc_db version_locations since
+        # the bdc-db is also registered on setup entry_points
         if ('bdc_db', script_location) in version_locations:
             version_locations.remove(('bdc_db', script_location))
 
@@ -59,8 +61,6 @@ class BDCDatabase:
             'script_location': script_location,
             'version_locations': version_locations,
         })
-
-        print(app.config['ALEMBIC'])
 
         app.config.setdefault('ALEMBIC_EXCLUDE_TABLES', ['spatial_ref_sys'])
 
