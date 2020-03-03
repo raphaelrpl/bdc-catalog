@@ -9,6 +9,26 @@
 Running BDC-DB in the Command Line
 ==================================
 
+The ``bdc-test`` is an example how it works:
+
+.. code-block:: python
+
+        setup(
+          ...,
+
+          entry_points={
+            'console_scripts': [
+                'bdc-test = bdc_test.cli:cli'
+            ],
+            'bdc_db.alembic': [
+                'bdc_test = bdc_test:alembic'
+            ],
+            'bdc_db.models': [
+                'bdc_test = bdc_test.models'
+            ]
+          },
+        )
+
 
 Creating the Brazil Data Cube data model
 ----------------------------------------
@@ -52,18 +72,59 @@ To make sure that database is up to date, use the following:
 Updating the Migration Scripts
 ------------------------------
 
-The ``bdc-db`` supports ``alembic`` branches, which enables to generate revisions on different modules.
-
-Each module should create a ``branch`` for its revisions. The following example describes how to create a revision directly on ``bdc-db``:
-
 .. code-block:: shell
 
         SQLALCHEMY_DATABASE_URI="postgresql://username:password@localhost:5432/bdcdb" \
         bdc-db alembic revision "Revision message."
 
-It creates a new revision and it will be placed in the ``bdc_db/alembic``.
 
-To create a new revision for module, you must create a `branch <https://alembic.sqlalchemy.org/en/latest/branches.html>`_ and get latest revision id to make persistent migration.
+
+Adding bdc-db as dependency to existing modules
+-----------------------------------------------
+
+.. note::
+
+        The following steps assume that ``bdc_test`` is the name of the module for which you are adding alembic support.
+
+
+The module ``bdc-db`` uses dynamic model loading in order to track both ``bdc-db`` and others python modules. It was built on top of `Python Setup entry_points <https://setuptools.readthedocs.io/en/latest/setuptools.html>`_.
+
+In order to load models dynamically, you must edit ``setup.py`` in your package ``bdc-test`` and append your module ``alembic`` and ``models`` to the following entry points:
+
+
+- **bdc_db.alembic** defines where migrations will be stored.
+- **bdc_db.models** defines where SQLAlchemy models will be mapped.
+
+
+The ``setup.py`` should be like as follows:
+
+.. code-block:: python
+
+        setup(
+          ...,
+
+          entry_points={
+            'bdc_db.alembic': [
+                'bdc_test = bdc_test:alembic'
+            ],
+            'bdc_db.models': [
+                'bdc_test = bdc_test.models'
+            ]
+          },
+        )
+
+This will register the ``bdc_test/alembic`` directory in the alembic's version locations.
+It also will make the ``bdc_test/models`` be discoverable and loaded in memory to track revisions.
+
+
+Creating a new revision
+-----------------------
+
+The ``bdc-db`` supports `Alembic Branches <https://alembic.sqlalchemy.org/en/latest/branches.html>`_, which enables to generate revisions on different modules.
+
+Each module should create a ``branch`` for its revisions.
+
+To create a new revision for module ``bdc_test``, you must create a ``branch`` and get latest revision id to make persistent migration.
 Use the following command to get latest revision id:
 
 .. code-block:: shell
@@ -95,4 +156,5 @@ In order to do generate migration for your module, use the following command:
 
         When a ``parent`` is not given for **other modules** the revision will be placed into default branch ``()`` and you may face issues
         during ``bdc-db alembic upgrade``.
+        The ``--parent`` argument is required only in the first revision generation.
         If the path is not given the new revision will be placed in the ``bdc_db/alembic`` directory and should be moved.
